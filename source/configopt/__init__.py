@@ -163,7 +163,7 @@ class ConfigOptGroup(object):
 class ConfigOpt(object):
     """Command line and config file option merger."""
 
-    def __init__(self, app_name=None):
+    def __init__(self, app_name=None, config_name=None):
         """Class initialization. <app_name> is used to create the config file
         in the user home directory."""
 
@@ -173,9 +173,12 @@ class ConfigOpt(object):
             (name, _) = os.path.splitext(filename)
             app_name = name
 
+        if not config_name:
+            self._config_name = os.path.expanduser(os.path.join('~', '.' +
+                app_name))
+        else:
+            self._config_name = config_name
 
-        self._config_name = os.path.expanduser(os.path.join('~', '.' +
-            app_name + '.ini'))
         self._cmd_parser = OptionParser(option_class=ReferenceOption)
 
         self._cmd_parser.add_option('-c', '--config',
@@ -219,11 +222,12 @@ class ConfigOpt(object):
 
         for section in config.sections():
             if section not in self._groups:
-                continue        # ignore this group
+                self._groups[section] = ConfigOptGroup(section, '!')
 
             for option in config.options(section):
                 if option not in self._groups[section].options:
-                    continue
+                    self._groups[section].options[option] = \
+                        ConfigOptOption(name=section)
 
                 value = config.get(section, option)
                 # Convert boolean values
