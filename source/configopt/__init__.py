@@ -155,10 +155,14 @@ class ConfigOptGroup(object):
         return
 
     def __getitem__(self, key):
+        print 'requesting', key
         return self.options[key].value
 
     def __setitem__(self, key, value):
         self.options[key].value = value
+
+    def __iter__(self):
+        return self.options.iteritems()
 
 class ConfigOpt(object):
     """Command line and config file option merger."""

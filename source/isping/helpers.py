@@ -12,3 +12,9 @@ def view_in_browser(html):
     import webbrowser
     open('tmp.html', 'wb').write(html)
     webbrowser.open('tmp.html')
+
+def get_provider_module(provider):
+    module = 'providers.' + provider
+    provider = __import__(module, globals(), locals(), ['get_usage'])
+    return provider
+

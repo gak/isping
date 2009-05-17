@@ -4,6 +4,7 @@ import urllib
 
 from isping import helpers
 from isping.exceptions import InvalidCredentialsException
+from providers import Setting
 
 name = 'TPG Internet'
 url = 'http://tpg.com.au'
@@ -24,8 +25,8 @@ def periods():
 
 def settings():
     return [
-        'username',
-        'password',
+        Setting('username'),
+        Setting('password'),
         ]
 
 def get_usage():

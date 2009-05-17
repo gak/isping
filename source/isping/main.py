@@ -1,6 +1,8 @@
 import sys
 import configopt
 
+from isping import helpers
+
 class Main(object):
 
     def __init__(self):
@@ -30,17 +32,30 @@ class Main(object):
         self.cfg()
         self.debug_config()
 
-        self.account_cfg = {}
         accounts = self.cfg['General']['accounts'].split(',')
+        for account in accounts:
+            try:
+                isp = self.cfg[account]['isp']
+            except KeyError:
+                print('Account %s needs an "isp" config option' % (account))
+                sys.exit(1)
+
+        provider = helpers.get_provider_module(isp)
+        provider_settings = provider.settings()
+        for setting in provider_settings:
+            if setting.is_required and setting.name not in self.cfg[account]:
+                print('Account %s is missing a required setting: %s' % (
+                    account, setting.name))
+                sys.exit(1)
+
+        return True
+
 
     def debug_config(self):
-        from pprint import pprint
         for group_name, group in self.cfg._groups.items():
             print group_name
             for option_name, option in group.options.items():
                 print ' -', option_name, '=', option.value
-
-
 
     def run(self):
         pass
