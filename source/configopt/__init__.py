@@ -155,7 +155,6 @@ class ConfigOptGroup(object):
         return
 
     def __getitem__(self, key):
-        print 'requesting', key
         return self.options[key].value
 
     def __setitem__(self, key, value):

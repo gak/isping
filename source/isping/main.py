@@ -34,24 +34,24 @@ class Main(object):
 
         accounts = self.cfg['General']['accounts'].split(',')
         for account in accounts:
-            try:
-                isp = self.cfg[account]['isp']
-            except KeyError:
-                print('Account %s needs an "isp" config option' % (account))
-                sys.exit(1)
+            self.check_account(account)
+
+        return True
+
+    def check_account(self, account):
+        try:
+            isp = self.cfg[account]['isp']
+        except KeyError:
+            print('Account %s needs an "isp" config option' % (account))
+            sys.exit(1)
 
         provider = helpers.get_provider_module(isp)
         provider_settings = provider.settings()
         for setting in provider_settings:
-            print setting, '?'
-            print list(iter(self.cfg[account]))
             if setting.is_required and setting.name not in self.cfg[account]:
                 print('Account %s is missing a required setting: %s' % (
                     account, setting.name))
                 sys.exit(1)
-
-        return True
-
 
     def debug_config(self):
         for group_name, group in self.cfg._groups.items():
