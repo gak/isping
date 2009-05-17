@@ -15,7 +15,7 @@ def main():
 
     # Load the provider module and populate it with the settings
     provider = __import__(module, globals(), locals(), ['get_usage'])
-    provider.__dict__.update(args)
+    provider.set_config(args)
 
     print provider.get_usage()
 

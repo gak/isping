@@ -163,6 +163,10 @@ class ConfigOptGroup(object):
     def __iter__(self):
         return self.options.iterkeys()
 
+    def get_key_value_dict(self):
+        return dict([ (k, v.value) for k, v in self.options.items() ])
+
+
 class ConfigOpt(object):
     """Command line and config file option merger."""
 

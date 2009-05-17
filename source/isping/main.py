@@ -32,8 +32,8 @@ class Main(object):
         self.cfg()
         self.debug_config()
 
-        accounts = self.cfg['General']['accounts'].split(',')
-        for account in accounts:
+        self.accounts = self.cfg['General']['accounts'].split(',')
+        for account in self.accounts:
             self.check_account(account)
 
         return True
@@ -46,7 +46,7 @@ class Main(object):
             sys.exit(1)
 
         provider = helpers.get_provider_module(isp)
-        provider_settings = provider.settings()
+        provider_settings = provider.get_settings()
         for setting in provider_settings:
             if setting.is_required and setting.name not in self.cfg[account]:
                 print('Account %s is missing a required setting: %s' % (
@@ -59,6 +59,17 @@ class Main(object):
             for option_name, option in group.options.items():
                 print ' -', option_name, '=', option.value
 
+    def get_account_details(self, account):
+        isp = self.cfg[account]['isp']
+        provider = helpers.get_provider_module(isp)
+        provider.set_config(self.cfg[account].get_key_value_dict())
+
     def run(self):
-        pass
+        for account in self.accounts:
+            self.run_account(account)
+
+    def run_account(self, account):
+        details = self.get_account_details(account)
+        print details
+
 

@@ -23,11 +23,15 @@ def periods():
         'Off-peak'
     ]
 
-def settings():
+def get_settings():
     return [
         Setting('username'),
         Setting('password'),
         ]
+
+def set_config(d):
+    globals().update(d)
+    print d
 
 def get_usage():
     opener = helpers.get_opener()
