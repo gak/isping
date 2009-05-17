@@ -43,6 +43,8 @@ class Main(object):
         provider = helpers.get_provider_module(isp)
         provider_settings = provider.settings()
         for setting in provider_settings:
+            print setting, '?'
+            print list(iter(self.cfg[account]))
             if setting.is_required and setting.name not in self.cfg[account]:
                 print('Account %s is missing a required setting: %s' % (
                     account, setting.name))
