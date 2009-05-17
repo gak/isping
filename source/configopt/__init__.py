@@ -240,18 +240,14 @@ class ConfigOpt(object):
         """Save the config file."""
         config = ConfigParser.SafeConfigParser()
         for group in self._groups:
-            group_added = False
+
+            config.add_section(group)
 
             for option_id in self._groups[group].options:
                 option = self._groups[group].options[option_id]
 
                 if not option.config_option:
                     continue
-
-                if not group_added:
-                    # prevents empty groups
-                    config.add_section(group)
-                    group_added = True
 
                 config.set(group, option.name, str(option.value))
 
