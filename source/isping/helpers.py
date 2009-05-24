@@ -15,13 +15,7 @@ def view_in_browser(html):
 
 def get_provider_module(provider):
     module = 'providers.' + provider
-
-    # This is done so that variables in the scope of the provider module are
-    # cleared. This is a paranoid safety precaution so that variables from
-    # previous uses of the module are not left over.
-    if module in sys.modules:
-        del(sys.modules[module])
-
-    provider = __import__(module, None, None, ['*'])
-    return provider
+    provider_mod = __import__(module, None, None, ['*'])
+    provider_cls = getattr(provider_mod, provider_mod.cls)
+    return provider_cls()
 
