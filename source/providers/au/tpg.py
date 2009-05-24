@@ -34,6 +34,7 @@ class TPG:
 
     def set_config(self, **d):
         for k, v in d.items():
+            print 'Setting', k, 'to', v
             setattr(self, k, v)
 
     def get_usage(self):

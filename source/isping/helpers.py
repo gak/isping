@@ -13,7 +13,7 @@ def view_in_browser(html):
     open('tmp.html', 'wb').write(html)
     webbrowser.open('tmp.html')
 
-def get_provider_module(provider):
+def get_provider_instance(provider):
     module = 'providers.' + provider
     provider_mod = __import__(module, None, None, ['*'])
     provider_cls = getattr(provider_mod, provider_mod.cls)
