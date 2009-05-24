@@ -2,13 +2,18 @@ import sys
 import configopt
 
 from isping import helpers
+from isping.services import Services
 
 class Main(object):
 
     def __init__(self):
-        self.init_config()
+        self.init_main_config()
+        self.init_services()
 
-    def init_config(self):
+    def init_services(self):
+        self.services = Services()
+
+    def init_main_config(self):
         self.cfg = configopt.ConfigOpt('isping')
 
         self.cfg.add_group('General', 'General Options')
@@ -23,18 +28,11 @@ class Main(object):
             option='password',
             help='Your ISPing password',
             )
-        self.cfg.add_option('-a', '--accounts',
-            group='General',
-            option='accounts',
-            help='A comma separated list of accounts',
-            )
 
         self.cfg()
         self.debug_config()
 
-        self.accounts = self.cfg['General']['accounts'].split(',')
-        for account in self.accounts:
-            self.check_account(account)
+        self.main = self.cfg['General']
 
         return True
 
@@ -60,12 +58,21 @@ class Main(object):
                 print ' -', option_name, '=', option.value
 
     def get_account_details(self, account):
-        isp = self.cfg[account]['isp']
+        isp = account['isp.module']
         provider = helpers.get_provider_module(isp)
-        provider.set_config(self.cfg[account].get_key_value_dict())
+#        provider.set_config(self.cfg[account].get_key_value_dict())
+
+    def fetch_accounts(self):
+        self.services.post('login',
+            username=self.main['username'], 
+            password=self.main['password'],
+        )
+        return self.services.get('accounts')
 
     def run(self):
-        for account in self.accounts:
+        accounts = self.fetch_accounts()
+        print accounts
+        for account in accounts:
             self.run_account(account)
 
     def run_account(self, account):
