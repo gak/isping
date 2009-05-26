@@ -17,5 +17,5 @@ def get_provider_instance(provider):
     module = 'providers.' + provider
     provider_mod = __import__(module, None, None, ['*'])
     provider_cls = getattr(provider_mod, provider_mod.cls)
-    return provider_cls()
+    return provider_cls(debug=True, debug_view_in_browser=True)
 

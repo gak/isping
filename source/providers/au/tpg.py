@@ -30,19 +30,18 @@ class TPG(Provider):
         ]
 
     def get_current_usage(self):
-        opener = helpers.get_opener()
 
         # Login
-        args = urllib.urlencode({
+        args = {
             'check_username': self.username,
             'password': self.password,
-        })
-        html = opener.open(self.url, args).read()
+        }
+        html = self.post(self.url, args)
         if html.find('Invalid') != -1:
             raise InvalidCredentialsException()
 
         # Fetch usage page
-        html = opener.open(self.url + '?function=checkaccountusage').read()
+        html = self.get(self.url + '?function=checkaccountusage')
 
         # Parse the usage page
         match = self.reo_peak.search(html)

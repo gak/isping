@@ -16,9 +16,9 @@ def main():
 
     # Load the provider module and populate it with the settings
     provider = helpers.get_provider_instance(sys.argv[1])
-    provider.set_config(**args)
+    provider.set_config_items(**args)
 
-    print provider.get_usage()
+    print provider.get_current_usage()
 
 if __name__ == '__main__':
     main()
