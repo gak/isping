@@ -77,7 +77,7 @@ class Main(object):
             # Get existing value from cfg
             try:
                 existing = cfg.get(sec, setting.name, None)
-            except ConfigParser.NoSectionError:
+            except ConfigParser.NoOptionError:
                 existing = None
 
             inp = '%s: ' % setting.name

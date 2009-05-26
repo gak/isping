@@ -20,6 +20,10 @@ class Optus(Provider):
     url = 'https://my.optus.com.au/'
 
     re_homepage = re.compile(r'SMAGENTNAME=([^&]*)')
+    re_usage = re.compile(
+        r'Data - Mobile Internet</td>'
+        r'<td class="blue1">([\d\.]+)'
+    )
 
     def get_settings(self):
         return [
@@ -59,10 +63,13 @@ class Optus(Provider):
             '_pageLabel=deeplink_myusage_postpaid&site=personal&' + \
             'pageName=unbilledUsage&virAcctNum=' + self.phone_number
         html = self.get(url)
+        match = Optus.re_usage.search(html)
+        usage = match.group(1)
         helpers.view_in_browser(html)
 
         # Parse the usage page
 
         return {
+            GENERAL: usage,
         }
 
