@@ -180,11 +180,16 @@ class ConfigOpt(object):
             (name, _) = os.path.splitext(filename)
             app_name = name
 
+        # Create a "~/.%(app_name)s/"
+        self._config_path  = \
+            os.path.expanduser(os.path.join('~', '.' + app_name))
+        if not os.path.exists(self._config_path):
+            os.makedirs(self._config_path)
+
         if not config_name:
-            self._config_name = os.path.expanduser(os.path.join('~', '.' +
-                app_name))
+            self._config_name = os.path.join(self._config_path, 'config')
         else:
-            self._config_name = config_name
+            self._config_name = os.path.join(self._config_path, config_name)
 
         self._cmd_parser = OptionParser(option_class=ReferenceOption)
 
