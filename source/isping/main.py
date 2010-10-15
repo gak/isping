@@ -39,7 +39,6 @@ class Main(object):
             group='General',
             option='service_url',
             help='isping services URI',
-            default='http://rarrrr.com/services/',
             )
 
         self.main_cfg()
